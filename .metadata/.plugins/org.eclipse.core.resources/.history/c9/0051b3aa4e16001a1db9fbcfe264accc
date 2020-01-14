@@ -1,0 +1,54 @@
+package com.app.controller;
+
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+
+import com.app.model.ShipmentType;
+import com.app.service.IShipmentTypeService;
+
+@Controller
+@RequestMapping("/ship")
+public class ShipController {
+
+	@Autowired
+	private IShipmentTypeService ser;
+	
+	@RequestMapping("/Regpage")
+	public String regpage(ModelMap map)
+	{
+		map.addAttribute(new ShipmentType());
+		return "ShipmentReg";
+	}
+	@RequestMapping(value="/save",method=RequestMethod.POST)
+	public String saveship(@ModelAttribute ShipmentType shipmentType,ModelMap map)
+	{
+Integer id=	ser.SaveShipment(shipmentType);
+map.addAttribute("id",id);
+	return "ShipmentReg";
+		
+}
+	
+	@RequestMapping("/viewall")
+	public String viewall(ModelMap map)
+	{
+List<ShipmentType> st=ser.getallshipments();
+map.addAttribute("data",st);
+		return "ShipmentData";
+	}
+@RequestMapping("/editpage")
+	public String edit(@RequestParam Integer ShipmentId,ModelMap map)
+	{
+ShipmentType st=ser.getShipmentTypeById();
+	map.addAttribute("shipmentType",st);
+    return "ShipmentTypeEdit";
+	}
+	
+}
